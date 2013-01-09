@@ -5,8 +5,7 @@ use Data::Dumper;
 
 my $domain = "realestate.com.au";
 my $host = "partner";
-my 
-
+my @validips = ("203.17.253.19", "195.43.154.19")
 
 my $fqdn = $host . "." . $domain;
 
@@ -23,6 +22,6 @@ foreach my $ns ($packet->answer) {
   $pres->nameservers($ns->nsdname);
   $answer = $pres->query($fqdn, "A");
   foreach my $ip ($answer->answer) {
-    print "Got IP:" . $ip->address . "\n";
+    print "Got IP: " . $ip->address . "\n";
   }
 }
