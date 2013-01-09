@@ -5,7 +5,7 @@ use Data::Dumper;
 
 my $domain = "realestate.com.au";
 my $host = "partner";
-my @validips = ("203.17.253.19", "195.43.154.19")
+my @validips = ("203.17.253.19", "195.43.154.19");
 
 my $fqdn = $host . "." . $domain;
 
