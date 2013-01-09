@@ -3,12 +3,16 @@
 use Net::DNS::Resolver::Recurse;
 use Data::Dumper;
 
+# Configuration
 my $domain = "realestate.com.au";
 my $host = "partner";
 my @validips = ("203.17.253.19", "195.43.154.19");
 
-my $fqdn = $host . "." . $domain;
 
+
+
+# Code
+my $fqdn = $host . "." . $domain;
 
 my $pres = Net::DNS::Resolver->new;
 $pres->tcp_timeout(2);
@@ -22,6 +26,6 @@ foreach my $ns ($packet->answer) {
   $pres->nameservers($ns->nsdname);
   $answer = $pres->query($fqdn, "A");
   foreach my $ip ($answer->answer) {
-    print "Got IP: " . $ip->address . "\n";
+    if ( !(80 ~~ @validips) ) print "ERROR got IP: " . $ip->address . "\n";
   }
 }
