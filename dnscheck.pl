@@ -2,6 +2,7 @@
 
 use Net::DNS::Resolver::Recurse;
 use Data::Dumper;
+use 5.010001;
 
 # Configuration
 my $domain = "realestate.com.au";
@@ -26,6 +27,8 @@ foreach my $ns ($packet->answer) {
   $pres->nameservers($ns->nsdname);
   $answer = $pres->query($fqdn, "A");
   foreach my $ip ($answer->answer) {
-    if ( !(80 ~~ @validips) ) print "ERROR got IP: " . $ip->address . "\n";
+    if ( not grep $_ eq $ip->address, @validips ) {
+      print "ERROR got IP: " . $ip->address . "\n";
+    }
   }
 }
