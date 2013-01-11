@@ -3,6 +3,7 @@
 use 5.010001;
 use Net::DNS::Resolver::Recurse;
 use Getopt::Long;
+use Data::Dumper;
 
 # Configuration
 my $domain = '';
@@ -37,8 +38,10 @@ foreach my $ns ($packet->answer) {
   $pres->nameservers($ns->nsdname);
   $answer = $pres->query($fqdn, "A");
   $answers{$ns->nsdname} = [];
-  foreach my $ip ($answer->answer) {
-    push ($answers{$ns->nsdname}, $ip->address);
+  if (defined $answer) {
+    foreach my $ip ($answer->answer) {
+      push ($answers{$ns->nsdname}, $ip->address);
+    }
   }
 }
 
