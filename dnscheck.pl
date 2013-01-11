@@ -1,16 +1,26 @@
 #!/usr/bin/perl -w
 
-use Net::DNS::Resolver::Recurse;
-use Data::Dumper;
 use 5.010001;
+use Net::DNS::Resolver::Recurse;
+use Getopt::Long;
 
 # Configuration
-my $domain = "realestate.com.au";
-my $host = "partner";
-my @validips = ("203.17.253.19", "195.43.154.19");
+my $domain = '';
+my $host = '';
+my $ipstring = '';
 
-# Code
+###### Fetch config from command line ######
+my $cmdline = GetOptions ("domain|zone=s"   => \$domain,
+                          "record|property|host=s"   => \$host,
+                          "validips|ip|iplist=s" => \$ipstring);
 
+if (($domain eq '') || ($host eq '') || ($ipstring eq '')) {
+  print "Please provide a domain, host and list of valid ips\n";
+  print "Example: ./dnscheck.pl --domain danielhall.me --record mail --validips 106.187.99.154\n";
+  exit 2;
+}
+
+my @validips = split(/,/, $ipstring);
 
 ###### Fetch data from the authorative NS ######
 my $fqdn = $host . "." . $domain;
