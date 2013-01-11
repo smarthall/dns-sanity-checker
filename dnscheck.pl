@@ -40,7 +40,7 @@ foreach my $ns ($packet->answer) {
   $answers{$ns->nsdname} = [];
   if (defined $answer) {
     foreach my $ip ($answer->answer) {
-      push ($answers{$ns->nsdname}, $ip->address);
+      push (@{$answers{$ns->nsdname}}, $ip->address);
     }
   }
 }
