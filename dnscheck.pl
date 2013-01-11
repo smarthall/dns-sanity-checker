@@ -32,8 +32,6 @@ foreach my $ns ($packet->answer) {
   }
 }
 
-print Dumper(\%answers);
-
 ###### Process the data ######
 my @emptyns = ();
 my %invalidip = ();
@@ -47,7 +45,7 @@ foreach my $ns (keys %answers) {
   }
 
   foreach my $ip (@ips) {
-    if ( grep $_ eq $ip, @validips ) {
+    if ( !($ip ~~ @validips) ) {
       $invalidip{$ns} = $ip;
     }
   }
@@ -56,7 +54,7 @@ foreach my $ns (keys %answers) {
 ###### Tell nagios ######
 my $rtrncode = 0;
 my $status = '';
-my $extsstatus = '';
+my $extstatus = '';
 
 if (scalar(@emptyns) > 0) {
   $rtrncode = 2;
@@ -78,6 +76,6 @@ if ($rtrncode == 0) {
   $status = 'NS UNKNOWN - Something is preventing the check from checking';
 }
 
-print "$status|$extstatus";
+print "$status|$extstatus\n";
 exit $rtrncode;
 
