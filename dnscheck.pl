@@ -1,5 +1,24 @@
 #!/usr/bin/perl -w
 
+##########################################################################
+# Name: DNS Sanity Checker
+# Author: Daniel Hall <daniel@danielhall.me>
+# License: GPLv3+
+# URL: https://github.com/smarthall/dns-sanity-checker
+# Description:
+#  DNS Sanity check is designed to check that DNS RR or A records are
+#  being correctly served by all the authorative nameservers. It does
+#  this by first asking for the list of authorities, then checking that
+#  each one returns results, and that there are no invalid ips.
+#
+# TODO:
+#  - Accept address ranges as valid ips
+#  - If no valid ip list is given, only check for empty results
+#  - Support CNAME and MX records
+#  - Different output formats, not just Nagios
+#
+##########################################################################
+
 use 5.010001;
 use Net::DNS::Resolver::Recurse;
 use Getopt::Long;
