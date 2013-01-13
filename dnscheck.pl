@@ -9,11 +9,13 @@ use Data::Dumper;
 my $domain = '';
 my $host = '';
 my $ipstring = '';
+my $verbose = '';
 
 ###### Fetch config from command line ######
 my $cmdline = GetOptions ("domain|zone=s"   => \$domain,
                           "record|property|host=s"   => \$host,
-                          "validips|ip|iplist=s" => \$ipstring);
+                          "validips|ip|iplist=s" => \$ipstring,
+                          "verbose" => \$verbose);
 
 if (($domain eq '') || ($host eq '') || ($ipstring eq '')) {
   print "Please provide a domain, host and list of valid ips\n";
@@ -29,12 +31,17 @@ my $fqdn = $host . "." . $domain;
 my $pres = Net::DNS::Resolver->new;
 $pres->tcp_timeout(2);
 $pres->udp_timeout(2);
-$pres->debug(0);
+if ($verbose) {
+  $pres->debug(1);
+} else {
+  $pres->debug(0);
+}
  
 my $packet = $pres->query($domain, "NS");
 
 my %answers = ();
 foreach my $ns ($packet->answer) {
+  if ($verbose) {print "**** Checking " . $ns->nsdname . "\n"};
   $pres->nameservers($ns->nsdname);
   $answer = $pres->query($fqdn, "A");
   $answers{$ns->nsdname} = [];
@@ -51,14 +58,17 @@ my %invalidip = ();
 
 # Check each nameserver
 foreach my $ns (keys %answers) {
+  if ($verbose) {print "**** Processing $ns\n"};
   my @ips = @{$answers{$ns}};
 
   if (scalar(@ips) == 0) {
+    if ($verbose) {print "**** Nameserver $ns had no results\n"};
     push @emptyns, $ns
   }
 
   foreach my $ip (@ips) {
     if ( !($ip ~~ @validips) ) {
+      if ($verbose) {print "**** Nameserver $ns sent an invalid IP of $ip\n"};
       $invalidip{$ns} = $ip;
     }
   }
