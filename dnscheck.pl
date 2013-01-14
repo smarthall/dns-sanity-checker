@@ -1,10 +1,10 @@
 #!/usr/bin/perl -w
 
 ##########################################################################
-# Name: DNS Sanity Checker
-# Author: Daniel Hall <daniel@danielhall.me>
-# License: GPLv3+
-# URL: https://github.com/smarthall/dns-sanity-checker
+# Name:     DNS Sanity Checker
+# Author:   Daniel Hall <daniel@danielhall.me>
+# License:  GPLv3+
+# URL:      https://github.com/smarthall/dns-sanity-checker
 # Description:
 #  DNS Sanity check is designed to check that DNS RR or A records are
 #  being correctly served by all the authorative nameservers. It does
