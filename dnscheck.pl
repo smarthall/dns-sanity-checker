@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-
+# nagios: -epn
 ##########################################################################
 # Name:     DNS Sanity Checker
 # Author:   Daniel Hall <daniel@danielhall.me>
@@ -19,7 +19,7 @@
 #
 ##########################################################################
 
-use 5.010001;
+use 5.010000;
 use Net::DNS::Resolver::Recurse;
 use Getopt::Long;
 use Data::Dumper;
