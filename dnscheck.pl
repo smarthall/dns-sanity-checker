@@ -43,6 +43,7 @@ if (($domain eq '') || ($host eq '') || ($ipstring eq '')) {
 }
 
 my @validips = split(/,/, $ipstring);
+my $unknown = 0;
 
 ###### Fetch data from the authorative NS ######
 my $fqdn = $host . "." . $domain;
@@ -62,12 +63,14 @@ my %answers = ();
 foreach my $ns ($packet->answer) {
   if ($verbose) {print "**** Checking " . $ns->nsdname . "\n"};
   $pres->nameservers($ns->nsdname);
-  $answer = $pres->query($fqdn, "A");
+  $answer = $pres->send($fqdn, "A");
   $answers{$ns->nsdname} = [];
   if (defined $answer) {
     foreach my $ip ($answer->answer) {
       push (@{$answers{$ns->nsdname}}, $ip->address);
     }
+  } else {
+    $unknown = 1;
   }
 }
 
@@ -106,6 +109,10 @@ if (scalar(@emptyns) > 0) {
 if (scalar(keys %invalidip) > 0) {
   $rtrncode = 2;
   $extstatus .= 'Nameservers sending invalid IP addresses: ' . join(', ', %invalidip) . " ";
+}
+
+if ($unknown == 1) {
+  $rtrncode = 3;
 }
 
 if ($rtrncode == 0) {
